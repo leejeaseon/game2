@@ -1,0 +1,95 @@
+
+<idoctype html>
+<head>
+	<title>꿀벌잡기</title>
+	<style>
+		.bee{
+			width:100px; height:400px; 
+		
+			background-repeat:no-repeat;
+			animation: bMove 15s linear;
+		}
+
+		@keyframes bMove{
+			0%{ background-position: 0 300px; opacity:0;}
+			20%{opacity:1;}
+			80%{ opacity:1; }
+			100%{ background-position:0 0;opacity:0;}
+		}
+	</style>
+</head>
+<div id="time" style="font-size:1em"></div>
+<div id="displayMark" style="font-size: 1em">0</div>
+
+<body>
+	<script>
+	var timeD = setInterval(checkTime,100);
+	setTimeout(result,30000);
+	var game = setInterval(attachBee,500);
+
+	var a = 0 ;
+	var mark = 0 ;
+    function checkTime(){
+    	a = a + 1;
+    	console.log(a);
+    	time.innerHTML = "꿀벌은 누르지 말아요."+(299 - a) / 10 + "초 남았어요.";
+    }
+
+    function result(){
+    	alert("게임 끝!!! 너의 점수는\n"+mark+"점이야! ");
+    	clearInterval(game);
+    	clearInterval(timeD);
+
+    }
+
+
+	function attachBee(){
+		var t = document.createElement("div");
+		t.setAttribute("class","bee"); 
+		t.style.position = "absolute"; 
+
+		var color = randomBH(1,4);
+		
+		t.style.background = "url('bee_" + randomBH(1,4) + ".gif') no-repeat";
+		
+		t.style.backgroundSize = "100% auto";
+		t.style.top = randomBH(0,window.innerHeight-300) + "px";
+		t.style.left = randomBH(0,window.innerWidth) + "px";
+		t.addEventListener("animationend",remove);
+		t.onclick = function(){
+			markUp(this, color);
+		}
+		document.body.appendChild(t);		
+	}
+	
+	function markUp(t, color){
+		var markText = "";
+		if(color == 1){
+			mark -=500;
+			markText = "꿀벌을 누르면 안돼요!!"+mark+"점으로 줄어요!";
+			displayMark.style.fontSize = "3em";
+			displayMark.style.color = "red" ;
+		}else{
+			mark += 100;
+			markText = "잘했어요!" + mark + "점이네요!!";
+			displayMark.style.fontSize = "2em";
+			displayMark.style.color = "green";
+		}
+		displayMark.innerHTML = markText;
+		remove(t);
+
+	}
+		
+	function remove(){
+		var t = event.target; 
+		t.parentNode.removeChild(t); 
+	}
+
+	
+	function randomBH(min, max) {
+  		min = Math.ceil(min);
+  		max = Math.floor(max);
+  		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	</script>
+</body>
